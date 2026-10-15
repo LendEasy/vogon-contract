@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "le-vogon-contract"
+version = "0.1.0"
+description = "The Turn API: the wire protocol between a vogon voice gateway and the turn service it drives."
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+dependencies = []
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://github.com/LendEasy/vogon"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+vogon_contract = ["py.typed"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["F", "E", "W", "I", "B", "UP"]
+# UP007/UP045: the types keep ``Optional[X]`` / ``Union[...]`` on purpose — the
+# codec decodes by ``get_origin(hint) is typing.Union``, and ``X | None`` is a
+# ``types.UnionType`` instead. Modernising the syntax would break decoding.
+ignore = ["E501", "UP007", "UP045"]
