@@ -20,7 +20,7 @@ Pure module: no I/O, no imports from anywhere else in app.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import ClassVar, Literal, Optional, Union
+from typing import ClassVar, Literal, Optional, Protocol, Union
 
 # ── CallConfig (§4.1) ─────────────────────────────────────────────────────────
 
@@ -455,7 +455,13 @@ class EscalationResolved:
 
 PostCallFact = Union[EscalationLegEvent, EscalationResolved]  # noqa: UP007 — contract_codec matches typing.Union
 
-POST_CALL_FACT_TYPES: tuple[type, ...] = PostCallFact.__args__  # type: ignore[attr-defined]
+
+class _Kinded(Protocol):
+    """What every member of TransportEvent and PostCallFact has: the wire tag."""
+    kind: ClassVar[str]
+
+
+POST_CALL_FACT_TYPES: tuple[type[_Kinded], ...] = PostCallFact.__args__  # type: ignore[attr-defined]
 
 
 @dataclass(frozen=True)
@@ -509,7 +515,7 @@ TransportEvent = Union[  # noqa: UP007 — contract_codec matches typing.Union (
     LineVerdict,
 ]
 
-EVENT_TYPES: tuple[type, ...] = TransportEvent.__args__  # type: ignore[attr-defined]
+EVENT_TYPES: tuple[type[_Kinded], ...] = TransportEvent.__args__  # type: ignore[attr-defined]
 
 
 # ── Turn API requests / responses (§4) ────────────────────────────────────────

@@ -101,7 +101,7 @@ def _decode(hint: Any, value: Any) -> Any:
         return [_decode(item_hint, v) for v in value]
     if origin in (dict, dict) or hint is dict:
         return value
-    if dataclasses.is_dataclass(hint):
+    if isinstance(hint, type) and dataclasses.is_dataclass(hint):
         return _decode_dataclass(hint, value)
     return value  # str / int / float / bool
 
