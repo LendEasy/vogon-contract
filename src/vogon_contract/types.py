@@ -605,6 +605,13 @@ class ProcessEventsResponse:
     # CallConfig.silence_ladder): the turn side says when the far end has
     # answered the opening and the short pre-answer ladder no longer applies.
     silence_ladder: Optional[str] = None
+    # The reply to an EARLY end-of-turn signal (UtteranceEager) may carry the
+    # line that covers the wait for the turn's answer: the gateway holds it
+    # until the turn is final, checks it like any line it speaks on its own
+    # (the front guard), plays it only if the answer is not there yet, and
+    # drops it if the caller carries on. None or "" = no line: the gateway's
+    # own timed line is all there is. Never set on any other reply.
+    filler: Optional[str] = None
 
 
 @dataclass(frozen=True)
